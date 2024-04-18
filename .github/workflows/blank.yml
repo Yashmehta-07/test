@@ -35,16 +35,25 @@ jobs:
             echo "login successfull"
       
           
-      - name: Allow GitHub Actions Runner IP on EC2 security group
-        run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 0.0.0.0/0
+      # - name: Allow GitHub Actions Runner IP on EC2 security group
+      #   run: |
+      #     aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 0.0.0.0/0
 
-      - name: SSH into EC2 and Run Command
-        uses: appleboy/ssh-action@master
+      # - name: SSH into EC2 and Run Command
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: 184.72.89.114
+      #     username: ec2-user
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - name: Setup SSH for EC2
+        uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
         with:
-          host: 184.72.89.114
-          username: ec2-user
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
+          EC2_URL: 184.72.89.114
+   
+      - name: Create a new file on the EC2 instance with "hello-world"
+        run: ssh -o StrictHostKeyChecking=no ec2-user@$EC2_URL "echo "hello-world" >> new_file.txt"
           
       - name: ls command
         run : ls -a
