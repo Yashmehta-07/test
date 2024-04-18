@@ -39,7 +39,10 @@ jobs:
         run: |
           aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 0.0.0.0/0
 
-      - name: SSH to EC2 and Run Command
-        run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -j ec2-user@184.72.89.114 
+      - name: SSH into EC2 and Run Command
+        uses: appleboy/ssh-action@master
+        with:
+          host: 184.72.89.114
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
       
