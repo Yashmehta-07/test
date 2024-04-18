@@ -28,9 +28,9 @@ jobs:
             echo "login successfull"
       
           
-      - name: Allow GitHub Actions Runner IP on EC2 security group
-        run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 
+      # - name: Allow GitHub Actions Runner IP on EC2 security group
+      #   run: |
+      #     aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 
    
       - name: ssh into EC2
         run: |
