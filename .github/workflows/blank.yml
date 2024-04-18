@@ -37,7 +37,7 @@ jobs:
           
       - name: Allow GitHub Actions Runner IP on EC2 security group
         run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr ${{ needs.get_runner_ip.outputs.runner_cidr }}
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 0.0.0.0/0
 
       - name: SSH to EC2 and Run Command
         run: |
