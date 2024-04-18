@@ -10,13 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Public IP
-        id: ip
-        uses: haythem/public-ip@v1.2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Print Public IP
+      - name: Get GitHub Actions Runner IP
+        id: runner_ip
         run: |
-          echo $
+          RUNNER_IP=$(hostname -I | awk '{print $1}')
+          echo "Host IP Address: $RUNNER_IP"
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -27,7 +28,8 @@ jobs:
           
       - name: Allow GitHub Actions Runner IP on EC2 security group
         run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr $/32
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr ${{ runner_ip.outputs.RUNNER_IP }}/32
+
       - name: SSH to EC2 and Run Command
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@184.72.89.114 'ls -a'
