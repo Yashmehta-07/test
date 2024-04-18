@@ -8,6 +8,9 @@ on:
 jobs:
   ssh_to_ec2:
     runs-on: ubuntu-latest
+    outputs:
+      runner_ip: ${{ steps.get_ip.outputs.runner_ip }}
+      runner_cidr: ${{ steps.get_ip.outputs.runner_cidr }}
 
     steps:
       - name: Checkout code
@@ -17,7 +20,7 @@ jobs:
         id: runner_ip
         run: |
           RUNNER_IP=$(hostname -I | awk '{print $1}')
-          echo "Host IP Address: $RUNNER_IP"
+          echo "::set-output name=runner_ip::$RUNNER_IP"
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -28,7 +31,7 @@ jobs:
           
       - name: Allow GitHub Actions Runner IP on EC2 security group
         run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr ${{ runner_ip.outputs.RUNNER_IP }}/32
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr ${{ runner_ip.outputs.RUNNER_IP }}
 
       - name: SSH to EC2 and Run Command
         run: |
