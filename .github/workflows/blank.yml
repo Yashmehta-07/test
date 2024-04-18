@@ -45,4 +45,10 @@ jobs:
           host: 184.72.89.114
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - name: ls command
+        run : ls -a
+        
+      - name: hostname check
+        run: hostname
       
