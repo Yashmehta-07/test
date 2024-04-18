@@ -18,10 +18,6 @@ jobs:
         run: |
           RUNNER_IP=$(hostname -I | awk '{print $1}')
           echo "Host IP Address: $HOST_IP"
-
-      - name: Set up SSH
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
