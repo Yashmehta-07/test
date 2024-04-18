@@ -20,7 +20,6 @@ jobs:
           echo "Host IP Address: $HOST_IP"
 
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           
