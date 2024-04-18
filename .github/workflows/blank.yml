@@ -16,11 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get GitHub Actions Runner IP
-        id: runner_ip
+      - name: Get Runner IP and CIDR
+        id: get_ip
         run: |
-          RUNNER_IP=$(hostname -I | awk '{print $1}')
-          echo "::set-output name=runner_ip::$RUNNER_IP"
+          ip_cidr=$(hostname -I)
+          runner_ip=$(echo "$ip_cidr" | awk '{print $1}')
+          runner_cidr=$(echo "$ip_cidr" | awk '{print $1"/32"}')
+          echo "::set-output name=runner_ip::$runner_ip"
+          echo "::set-output name=runner_cidr::$runner_cidr"
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -31,7 +34,7 @@ jobs:
           
       - name: Allow GitHub Actions Runner IP on EC2 security group
         run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr ${{ runner_ip.outputs.RUNNER_IP }}
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr ${{ needs.get_runner_ip.outputs.runner_cidr }}
 
       - name: SSH to EC2 and Run Command
         run: |
