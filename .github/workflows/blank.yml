@@ -30,7 +30,7 @@ jobs:
         run: |
           # Replace EC2_INSTANCE_IP with your EC2 instance's public IP or hostname
           # Replace SECURITY_GROUP_ID with your EC2 security group ID
-          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 ${{RUNNER_IP}}
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 $RUNNER_IP
       - name: SSH to EC2 and Run Command
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@EC2_INSTANCE_IP 'ls -a'
