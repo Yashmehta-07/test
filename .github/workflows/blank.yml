@@ -8,10 +8,7 @@ on:
 jobs:
   ssh_to_ec2:
     runs-on: ubuntu-latest
-    outputs:
-      runner_ip: ${{ steps.get_ip.outputs.runner_ip }}
-      runner_cidr: ${{ steps.get_ip.outputs.runner_cidr }}
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,11 +16,7 @@ jobs:
       - name: Get Runner IP and CIDR
         id: get_ip
         run: |
-          ip_cidr=$(hostname -I)
-          runner_ip=$(echo "$ip_cidr" | awk '{print $1}')
-          runner_cidr=$(echo "$ip_cidr" | awk '{print $1"/32"}')
-          echo "::set-output name=runner_ip::$runner_ip"
-          echo "::set-output name=runner_cidr::$runner_cidr"
+          
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -35,21 +28,14 @@ jobs:
             echo "login successfull"
       
           
-      # - name: Allow GitHub Actions Runner IP on EC2 security group
-      #   run: |
-      #     aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 0.0.0.0/0
-
-      # - name: SSH into EC2 and Run Command
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: 184.72.89.114
-      #     username: ec2-user
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Allow GitHub Actions Runner IP on EC2 security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr 
    
       - name: ssh into EC2
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hello world!!" > test.txt'
+          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'hostname'
           
           
       - name: ls command
