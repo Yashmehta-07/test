@@ -16,8 +16,8 @@ jobs:
       - name: Get GitHub Actions Runner IP
         id: runner_ip
         run: |
-          RUNNER_IP=$(hostname -I | awk '{print $1}')
-          echo "Host IP Address: $HOST_IP"
+           RUNNER_IP=$(curl -s https://api.github.com/meta | jq -r '.actions[].runner_ip')
+            echo "::set-output name=cidr::$RUNNER_IP"
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
