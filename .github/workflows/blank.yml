@@ -25,5 +25,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
+          
+      - name: Allow GitHub Actions Runner IP on EC2 security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr $RUNNER_IP/32
+      - name: SSH to EC2 and Run Command
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@184.72.89.114 'ls -a'
       
