@@ -32,6 +32,12 @@ jobs:
           CIDR=$(echo "${{ steps.get_ip.outputs.cidr }}")
           aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr "$CIDR"
 
+      - name: SSH into EC2
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
+          hostname
+
 
       - name: Revoke GitHub Actions Runner IP from EC2 security group
         if: ${{ always() }}
@@ -39,10 +45,7 @@ jobs:
           CIDR=$(echo "${{ steps.get_ip.outputs.cidr }}")
           aws ec2 revoke-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr "$CIDR"
           
-      - name: SSH into EC2
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
+     
 
   ssh:
     runs-on: ubuntu-latest
