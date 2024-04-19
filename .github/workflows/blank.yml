@@ -35,7 +35,7 @@ jobs:
       - name: SSH into EC2
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@172.31.92.186 'echo "hostname is $(hostname)"'
+          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@3.89.142.250 'echo "hostname is $(hostname)"'
           echo "hostname is $(hostname)
 
 
