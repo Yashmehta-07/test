@@ -32,13 +32,6 @@ jobs:
           CIDR=$(echo "${{ steps.get_ip.outputs.cidr }}")
           aws ec2 authorize-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr "$CIDR"
 
-
-      - name: Revoke GitHub Actions Runner IP from EC2 security group
-        if: ${{ always() }}
-        run: |
-          CIDR=$(echo "${{ steps.get_ip.outputs.cidr }}")
-          aws ec2 revoke-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr "$CIDR"
-
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -50,6 +43,15 @@ jobs:
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           ssh -o StrictHostKeyChecking=no ec2-user@184.72.89.114  << 'EOF'
           hostname
+
+
+      - name: Revoke GitHub Actions Runner IP from EC2 security group
+        if: ${{ always() }}
+        run: |
+          CIDR=$(echo "${{ steps.get_ip.outputs.cidr }}")
+          aws ec2 revoke-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr "$CIDR"
+
+      
 
   # ssh:
   #   runs-on: ubuntu-latest
