@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
-          hostname
+          echo "hostname is $(hostname)
 
 
       - name: Revoke GitHub Actions Runner IP from EC2 security group
@@ -47,11 +47,11 @@ jobs:
           
      
 
-  ssh:
-    runs-on: ubuntu-latest
-    steps:
-     - name: SSH into EC2
-       run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
+  # ssh:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #    - name: SSH into EC2
+  #      run: |
+  #         echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
+  #         ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
     
