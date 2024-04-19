@@ -48,7 +48,7 @@ jobs:
         run: |
           # echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no -i ssh-private-key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
+          ssh -o StrictHostKeyChecking=no -i secrets.SSH_PRIVATE_KEY ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
 
   # ssh:
   #   runs-on: ubuntu-latest
