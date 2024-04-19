@@ -41,7 +41,7 @@ jobs:
         run: |
           
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=no ec2-user@184.72.89.114  << 'EOF'
+          ssh -o -t StrictHostKeyChecking=no ec2-user@184.72.89.114  << 'EOF'
           hostname
 
 
