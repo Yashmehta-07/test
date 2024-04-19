@@ -38,18 +38,24 @@ jobs:
         run: |
           CIDR=$(echo "${{ steps.get_ip.outputs.cidr }}")
           aws ec2 revoke-security-group-ingress --group-id sg-0a7d556a06013a58d --protocol tcp --port 22 --cidr "$CIDR"
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           
       - name: SSH into EC2
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
+          # echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          ssh -o StrictHostKeyChecking=no ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
 
-  ssh:
-    runs-on: ubuntu-latest
-    steps:
-     - name: SSH into EC2
-       run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
+  # ssh:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #    - name: SSH into EC2
+  #      run: |
+  #         echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 400 private_key
+  #         ssh -o StrictHostKeyChecking=no -i private_key ec2-user@184.72.89.114 'echo "hostname is $(hostname)"'
     
     
